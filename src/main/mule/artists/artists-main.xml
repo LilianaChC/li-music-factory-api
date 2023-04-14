@@ -23,7 +23,9 @@ output application/json
         </ee:transform>
     </flow>
 	<flow name="get:\artists:li-music-factory-api-config">
-        <ee:transform>
+        <set-variable value="artists-main::impl-get-artists" doc:name="currentFlow" doc:id="6959b653-8693-4004-8844-a396434f8aad" variableName="currentFlow"/>
+		<flow-ref doc:name="Flow Reference" doc:id="bf9e62b5-248f-4217-a2fd-59da5a020640" name="impl-get-artists"/>
+		<ee:transform>
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -62,7 +64,9 @@ output application/json
         </ee:transform>
     </flow>
 	<flow name="patch:\artists\(artistId):application\json:li-music-factory-api-config">
-        <ee:transform>
+        <set-variable value="artists-main::impl-update-artists" doc:name="currentFlow" doc:id="f73476d1-cab1-4d6b-b760-f3d187cd0f85" variableName="currentFlow"/>
+		<flow-ref doc:name="Flow Reference" doc:id="133f7bf5-dfb6-4414-b999-4db36093247c" name="impl-update-artist-urls"/>
+		<ee:transform>
             <ee:variables>
                 <ee:set-variable variableName="artistId">attributes.uriParams.'artistId'</ee:set-variable>
             </ee:variables>
@@ -164,7 +168,9 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\artists:application\json:li-music-factory-api-config">
-        <ee:transform>
+        <set-payload value="artists-main::impl-add-artists" doc:name="Set Payload" doc:id="3b052f98-e700-4e43-a7f8-fa924f09285e" />
+		<flow-ref doc:name="Flow Reference" doc:id="0da69846-5809-47fe-9da6-4a7b54f0e0d5" name="impl-add-artists"/>
+		<ee:transform>
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json

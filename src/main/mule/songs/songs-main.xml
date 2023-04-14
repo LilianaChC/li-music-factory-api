@@ -5,7 +5,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 <flow name="get:\songs:li-music-factory-api-config">
-        <ee:transform>
+        <set-payload value="#[songs-main::impl-get-songs]" doc:name="Set Payload" doc:id="2f324f95-3a99-4c16-b6d3-369e28664743" />
+		<flow-ref doc:name="Flow Reference" doc:id="0d051666-b910-4d21-b376-dc30d88af5f2" name="impl-get-catalog"/>
+		<ee:transform>
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json

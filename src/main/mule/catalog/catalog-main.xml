@@ -5,7 +5,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 <flow name="get:\catalog:li-music-factory-api-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+        <set-payload value="catalog-main::impl-get-catalog" doc:name="currentFlow" doc:id="4806e7ef-b015-4216-af69-6883e6a0a9b6" />
+		<flow-ref doc:name="Flow Reference" doc:id="26fcda93-6bd3-4b4a-b5b5-e82f4dff7c0a" name="impl-get-catalog"/>
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json

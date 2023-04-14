@@ -4,4 +4,7 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="impl-get-songs" doc:id="c8e24995-7c1e-4858-adb9-74f534983aa1" >
+		<logger level="INFO" doc:name="INFO START" doc:id="ebc9e103-1c2f-485e-a81b-5471f9805f00" message="impl-flow-name::START"/>
+	</sub-flow>
 </mule>
