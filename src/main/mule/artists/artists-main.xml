@@ -27,14 +27,14 @@ output application/json
 		<flow-ref doc:name="Flow Reference" doc:id="bf9e62b5-248f-4217-a2fd-59da5a020640" name="impl-get-artists"/>
     </flow>
 	<flow name="patch:\artists\(artistId):application\json:li-music-factory-api-config">
-        <set-variable value="artists-main::impl-update-artists" doc:name="currentFlow" doc:id="f73476d1-cab1-4d6b-b760-f3d187cd0f85" variableName="currentFlow"/>
+		<set-variable value="artists-main::impl-update-artists" doc:name="currentFlow" doc:id="f73476d1-cab1-4d6b-b760-f3d187cd0f85" variableName="currentFlow"/>
 		<flow-ref doc:name="Flow Reference" doc:id="133f7bf5-dfb6-4414-b999-4db36093247c" name="impl-update-artist-urls"/>
-		<ee:transform>
+        <ee:transform>
             <ee:variables>
                 <ee:set-variable variableName="artistId">attributes.uriParams.'artistId'</ee:set-variable>
             </ee:variables>
         </ee:transform>
-        <ee:transform>
+		<ee:transform>
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
