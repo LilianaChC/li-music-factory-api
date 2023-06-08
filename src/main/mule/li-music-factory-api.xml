@@ -11,10 +11,10 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <set-variable value="#[{&#10;	correlationId: message.attributes.headers.correlation_id,&#10;	clientId: message.attributes.headers.client_id,&#10;	clientSecret: message.attributes.headers.client_secret&#10;}]" doc:name="headerAttributes" doc:id="d2b983d2-aaba-4d76-8ad4-4039db33a440" variableName="headerAttributes"/>
+        <set-variable value="#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	correlationId: message.attributes.headers.correlation_id,&#10;	clientId: message.attributes.headers.client_id,&#10;	clientSecret: message.attributes.headers.client_secret&#10;}]" doc:name="headerAttributes" doc:id="d2b983d2-aaba-4d76-8ad4-4039db33a440" variableName="headerAttributes"/>
 		<set-variable value="li-music-factory-api-main::apiKitRouter" doc:name="currentFlow" doc:id="d8225648-a543-4e18-919e-437b22bc1709" variableName="currentFlow"/>
 		<apikit:router config-ref="li-music-factory-api-config" />
-		<logger level="INFO" doc:name="Logger" doc:id="0c04460b-0be7-4783-b372-dcd8cf6dca4e" />
+		<logger level="INFO" doc:name="Logger" doc:id="0c04460b-0be7-4783-b372-dcd8cf6dca4e" message="#['li-music-factory-api-main::payload: ' ++ write]"/>
     </flow>
 	<flow name="li-music-factory-api-console">
         <http:listener path="/console/*" config-ref="http-listener-config">
