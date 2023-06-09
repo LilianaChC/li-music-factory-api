@@ -39,7 +39,7 @@ output application/json
 		</ee:transform>
 	</sub-flow>
 	<sub-flow name="impl-add-artists" doc:id="9af77b67-4059-4d10-b428-d0c466c3ceee" >
-		<logger level="INFO" doc:name="INFO START" doc:id="6416f0cc-7a65-490b-a149-1867bf621fe1" message="#['impl-add-artists::START::sizeOf payload: '  ++ sizeOf (payload.artists)]"/>
+		<logger level="INFO" doc:name="INFO START" doc:id="6416f0cc-7a65-490b-a149-1867bf621fe1" message="#['impl-add-artists::START::sizeOfpayload: '  ++ sizeOf(payload.artists)]"/>
 		<ee:transform doc:name="“artists, artistsOut, artistsFound" doc:id="513de6b1-68f4-4166-b2b1-3b17b2dba196" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
