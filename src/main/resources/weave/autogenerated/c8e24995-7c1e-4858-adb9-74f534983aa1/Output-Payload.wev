@@ -1,0 +1,15 @@
+%dw 2.0
+
+type auto_c8e24995_7c1e_4858_adb9_74f534983aa1_Output_Payload = {
+  songs: Array<{    duration?: String,     songTitle: String,     albumName?: String,     songWriters?: Array<{      writer: String,       _?: Any    }>, 
+    genre: "Pop" | "HipHop" | "Rock" | "Jazz" | "Country" | "Classical" | "Mariachi" | "Metal" | "Other", 
+    albumId?: Number, 
+    songId?: Number, 
+    publicationDate?: String, 
+    _?: Any
+  }>, 
+  message: String, 
+  statusCode: Number, 
+  _?: Any
+}
+

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<sub-flow name="impl-get-artists" doc:id="807f1901-7a7c-4206-a0c2-9b89a955aff3" >
+		<logger level="INFO" doc:name="INFO START" doc:id="d109c30c-76d2-4593-99fe-7e757c47f6cc" message="#['impl-get-artists::START::payload:'  ++ write(payload, 'application/json')]"/>
+		<set-variable value="#[attributes.queryParams.groupName]" doc:name="groupName" doc:id="311198b2-265e-4ac6-a99d-e1401ffba668" variableName="groupName"/>
+		<db:select doc:name="SELECT artist" doc:id="7fed66c0-562a-45c6-bc49-f35e767a197f" config-ref="mysql-config">
+			<db:sql ><![CDATA[SELECT ARTIST_ID, GROUP_NM, FIRST_NM, LAST_NM, BIRTH_DATE, MI, DEATH_DATE 	
+    FROM BC_ARTIST 
+	  WHERE GROUP_NM LIKE :groupName]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	groupName: vars.groupName ++ '%'
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="6842b247-5c26-4534-aa39-24d0f38c93d9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	statusCode: p('http.get.status.ok'),
+	message: p('http.get.message.ok'),
+	searchCriteria: vars.groupName,
+	artists: payload map ( artist ) -> {
+		artistId: artist.ARTIST_ID,
+		groupName: artist.GROUP_NM default "",
+		lastName: artist.LAST_NM default "",
+		firstName: artist.FIRST_NM default "",
+		dateOfBirth: artist.BIRTH_DATE as String {format: "yyyy-MM-dd"} default "",
+		mi: artist.MI default "",
+		dateOfDeath: artist.DEATH_DATE as String {format: "yyyy-MM-dd"} default ""
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="impl-add-artists" doc:id="9af77b67-4059-4d10-b428-d0c466c3ceee" >
+		<logger level="INFO" doc:name="INFO START" doc:id="6416f0cc-7a65-490b-a149-1867bf621fe1" message="#['impl-add-artists::START::sizeOfpayload: '  ++ sizeOf(payload.artists)]"/>
+		<ee:transform doc:name="“artists, artistsOut, artistsFound" doc:id="513de6b1-68f4-4166-b2b1-3b17b2dba196" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	artists: {
+		artistId: payload.artistId,
+		groupName: payload.groupName,
+		lastName: payload.lastName,
+		firstName: payload.firstName,
+		mi: payload.mi,
+		dateOfBirth: payload.dateOfBirth,
+		dateOfDeath: payload.dateOfDeath
+	}
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="artistsOut" ><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-variable>
+				<ee:set-variable variableName="artistsFound" ><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-variable>
+				<ee:set-variable variableName="artists" ><![CDATA[%dw 2.0
+output application/json
+---
+payload.artists]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each Artist" doc:id="58a200a9-7b5d-44c0-823b-af0856d6589d" collection="#[vars.artists]">
+			<logger level="INFO" doc:name="payload" doc:id="a8ac2659-3944-4dc0-a361-43e39ffde651" message="#['impl-add-artists::ForEach::payload: ' ++ write(payload, 'application/json')]"/>
+			<set-payload value="#[output application/json&#10;---&#10;{&#10;	artists: {&#10;		artistId: payload.artistId,&#10;		groupName: payload.groupName,&#10;		lastName: payload.lastName,&#10;		firstName: payload.firstName,&#10;		mi: payload.mi,&#10;		dateOfBirth: payload.dateOfBirth,&#10;		dateOfDeath: payload.dateOfDeath&#10;	}&#10;}]" doc:name="artist" doc:id="11debe35-34a5-4e7d-b2bd-61b67dd8653c" />
+			<logger level="DEBUG" doc:name="artist" doc:id="928cc591-c233-4be4-928a-287aba189c54" message="#['impl-add-artists::ForEach::artist: ' ++ write(payload, 'application/json')]" />
+		</foreach>
+	</sub-flow>
+	<sub-flow name="impl-update-artist-urls" doc:id="05466805-dc5e-4413-bf1b-9c0106d4fd68" >
+		<logger level="INFO" doc:name="INFO START" doc:id="ec1104a7-45e9-4d44-a601-0344340973f9" message="#['impl-update-artist-urls::START::payload:'  ++ write(payload, 'application/json')]"/>
+	</sub-flow>
+</mule>

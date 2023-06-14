@@ -1,0 +1,27 @@
+%dw 2.0
+
+type auto_05466805_dc5e_4413_bf1b_9c0106d4fd68_Output_Attributes = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {|
+    client_id: String, 
+    client_secret: String, 
+    correlation_id: String
+  |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {|  |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {| artistId: String |}, 
+  version: String, 
+  localAddress: String
+|}
+
