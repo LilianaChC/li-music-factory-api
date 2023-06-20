@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <apikit:config name="li-music-factory-api-config" api="resource::89621011-2ab4-4835-af4b-38a176fb5b37:lil-music-factory-api:1.0.1:raml:zip:li-music-factory-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<flow name="li-music-factory-api-main">
+        <http:listener path="/api/*" config-ref="http-listener-config">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <set-variable value="#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	correlationId: message.attributes.headers.correlation_id,&#10;	clientId: message.attributes.headers.client_id,&#10;	clientSecret: message.attributes.headers.client_secret&#10;}]" doc:name="headerAttributes" doc:id="d2b983d2-aaba-4d76-8ad4-4039db33a440" variableName="headerAttributes"/>
+		<set-variable value="li-music-factory-api-main::apiKitRouter" doc:name="currentFlow" doc:id="d8225648-a543-4e18-919e-437b22bc1709" variableName="currentFlow"/>
+		<apikit:router config-ref="li-music-factory-api-config" />
+		<logger level="INFO" doc:name="Logger" doc:id="0c04460b-0be7-4783-b372-dcd8cf6dca4e" message="#['li-music-factory-api-main::payload: ' ++ write(payload,'application/json')]"/>
+    </flow>
+	<flow name="li-music-factory-api-console">
+        <http:listener path="/console/*" config-ref="http-listener-config">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="li-music-factory-api-config" />
+    </flow>
+    
+	
+	
+</mule>
