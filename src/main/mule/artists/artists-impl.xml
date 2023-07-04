@@ -6,7 +6,7 @@
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<sub-flow name="impl-get-artists" doc:id="807f1901-7a7c-4206-a0c2-9b89a955aff3" >
-		<logger level="INFO" doc:name="INFO START" doc:id="d109c30c-76d2-4593-99fe-7e757c47f6cc" message="#['impl-get-artists::START::payload:'  ++ write(payload, 'application/json')]"/>
+		<logger level="INFO" doc:name="INFO START" doc:id="d109c30c-76d2-4593-99fe-7e757c47f6cc" message="impl-get-artists::START"/>
 		<set-variable value="#[attributes.queryParams.groupName]" doc:name="groupName" doc:id="311198b2-265e-4ac6-a99d-e1401ffba668" variableName="groupName"/>
 		<db:select doc:name="SELECT artist" doc:id="7fed66c0-562a-45c6-bc49-f35e767a197f" config-ref="mysql-config">
 			<db:sql ><![CDATA[SELECT ARTIST_ID, GROUP_NM, FIRST_NM, LAST_NM, BIRTH_DATE, MI, DEATH_DATE 	
@@ -45,17 +45,7 @@ output application/json
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-{
-	artists: {
-		artistId: payload.artistId,
-		groupName: payload.groupName,
-		lastName: payload.lastName,
-		firstName: payload.firstName,
-		mi: payload.mi,
-		dateOfBirth: payload.dateOfBirth,
-		dateOfDeath: payload.dateOfDeath
-	}
-}]]></ee:set-payload>
+payload.artists]]></ee:set-payload>
 			</ee:message>
 			<ee:variables >
 				<ee:set-variable variableName="artistsOut" ><![CDATA[%dw 2.0
