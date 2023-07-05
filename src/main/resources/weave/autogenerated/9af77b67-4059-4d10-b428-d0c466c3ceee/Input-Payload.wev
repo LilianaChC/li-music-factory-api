@@ -1,7 +1,0 @@
-%dw 2.0
-
-type auto_9af77b67_4059_4d10_b428_d0c466c3ceee_Input_Payload = {
-  artists: Array<{    firstName?: String,     lastName?: String,     bioUrl?: String,     groupName: String,     dateOfDeath?: String,     imageUrl?: String,     artistId?: Number,     dateOfBirth?: String,     mi?: String,     _?: Any  }>, 
-  _?: Any
-}
-

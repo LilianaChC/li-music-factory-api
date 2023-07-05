@@ -1,7 +1,0 @@
-%dw 2.0
-
-type auto_05466805_dc5e_4413_bf1b_9c0106d4fd68_Input_Payload = {
-  groupName: String, 
-  _?: Any
-}
-

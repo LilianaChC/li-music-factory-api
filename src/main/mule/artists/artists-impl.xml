@@ -66,7 +66,25 @@ payload.artists]]></ee:set-variable>
 			<logger level="INFO" doc:name="payload" doc:id="a8ac2659-3944-4dc0-a361-43e39ffde651" message="#['impl-add-artists::ForEach::payload: ' ++ write(payload, 'application/json')]"/>
 			<set-payload value="#[output application/json&#10;---&#10;{&#10;	artists: {&#10;		artistId: payload.artistId,&#10;		groupName: payload.groupName,&#10;		lastName: payload.lastName,&#10;		firstName: payload.firstName,&#10;		mi: payload.mi,&#10;		dateOfBirth: payload.dateOfBirth,&#10;		dateOfDeath: payload.dateOfDeath&#10;	}&#10;}]" doc:name="artist" doc:id="11debe35-34a5-4e7d-b2bd-61b67dd8653c" />
 			<logger level="DEBUG" doc:name="artist" doc:id="928cc591-c233-4be4-928a-287aba189c54" message="#['impl-add-artists::ForEach::artist: ' ++ write(payload, 'application/json')]" />
+			<flow-ref doc:name="sr-insert-artist" doc:id="f64e259e-6ef8-4191-9e61-eb5f4f6b7dc1" name="sr-insert-artist" target="newArtist"/>
+			<set-variable value="#[%dw 2.0&#10;output application/java&#10;---&#10;vars.artistsOut + vars.newArtist]" doc:name="append artistsOut" doc:id="64d96102-fc9c-403b-8096-70f7f5ab918f" variableName="artistsOut"/>
 		</foreach>
+		<ee:transform doc:name="add response" doc:id="6d1552c6-5c1f-4467-9bdf-9487db58d11d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    "statusCode": p('http.add.status.ok'),
+    "message":    p('http.add.message.ok'),
+    "artistsAdded": 
+   		  vars.artistsOut,
+	"duplicateArtists": 
+  		  vars.artistsFound
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
 	<sub-flow name="sr-insert-artist" doc:id="601f7afe-12fc-413d-8a7e-8183ebcf55c0" >
 		<logger level="INFO" doc:name="INFO START payload" doc:id="c7acbf6d-89a6-42a4-b20b-9a0c9db73cc4" message="#['sr-insert-artist::START::artist: ' ++ write(payload,'application/json')]"/>
