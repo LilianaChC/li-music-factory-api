@@ -150,6 +150,27 @@ type auto_601f7afe_12fc_413d_8a7e_8183ebcf55c0_Output_Variables_incomingArtist =
 
 ]]></types:shape>
     </types:type>
+    <types:type name="incomingArtist" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="artist" format="json">
+      <types:shape format="weave" example="api/examples/artist/requests/artistAddRequest.json"><![CDATA[%dw 2.0
+
+type artist = {|
+  artist: {|
+    artistId: Number {"typeId": "int"}, 
+    groupName: String, 
+    lastName: String, 
+    firstName: String, 
+    mi: String, 
+    dateOfBirth: String, 
+    dateOfDeath: String
+  |}
+|} {"example": "{\\\"artist\\\":{\\\"artistId\\\":0,\\\"groupName\\\":\\\"The Grateful Dead\\\",\\\"lastName\\\":\\\"Garcia\\\",\\\"firstName\\\":\\\"Gerry\\\",\\\"mi\\\":\\\"E\\\",\\\"dateOfBirth\\\":\\\"1982-03-21\\\",\\\"dateOfDeath\\\":\\\"2019-03-21\\\"}}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#7bc94b8f-de8e-4aa9-9e0c-6983528c101d">
     <types:processor-declaration>
@@ -200,5 +221,21 @@ type auto_601f7afe_12fc_413d_8a7e_8183ebcf55c0_Output_Variables_incomingArtist =
         </types:variables>
       </types:output-event>
     </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#513de6b1-68f4-4166-b2b1-3b17b2dba196">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:variables>
+          <types:variable name="artists" type="artists"/>
+        </types:variables>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#11debe35-34a5-4e7d-b2bd-61b67dd8653c">
+    <types:operation-declaration>
+      <types:inputs>
+        <types:parameter name="value" type="artist"/>
+      </types:inputs>
+    </types:operation-declaration>
   </types:enrichment>
 </types:mule>
