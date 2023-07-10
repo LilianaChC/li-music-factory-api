@@ -48,6 +48,13 @@ output application/json
 		<flow-ref doc:name="sr-build-query-param-list" doc:id="673dfacc-698a-4675-93ef-4a44de3dd697" name="sr-build-query-param-list" target="queryParamList"/>
 		<flow-ref doc:name="sr-select-artists" doc:id="691eab99-b8d6-4d5c-b8e6-a183234fdf99" name="sr-select-artists" />
 	</sub-flow>
+	<sub-flow name="sr-find-duplicate-artist" doc:id="23676cf3-d199-42ab-a6e2-14c6c20937a6" >
+		<logger level="INFO" doc:name="INFO START" doc:id="ae6eb052-e9d6-4440-b4a3-809244bd8ae1" message="#['sr-find-duplicate-artist::START::payload: ' ++ write(payload,'application/json')]"/>
+		<set-variable value="#[%dw 2.0&#10;output application/java&#10;var artist = payload.artist&#10;---&#10;{&#10;    groupName: 	artist.groupName,&#10;    firstName: 	artist.firstName,&#10;    lastName:     artist.lastName,&#10;    dateOfBirth:  artist.dateOfBirth&#10;  }]" doc:name="queryParamList" doc:id="e9a6145d-61d7-4797-a621-b19b1dc34e3e" variableName="queryParamList"/>
+		<logger level="INFO" doc:name="DEBUG queryParamList" doc:id="00aac273-064b-4e40-a99f-4f3894a9ef89" message="#['sr-find-duplicate-artist::queryParamList' ++ write(vars.queryParamList,'application/json')]"/>
+		<flow-ref doc:name="sr-select-artists" doc:id="69ebe731-00d0-4403-a606-ab07b49207d8" name="sr-select-artists"/>
+		<logger level="INFO" doc:name="INFO sizeOf" doc:id="b246ce64-ae4c-474e-ae93-be105d4d315f" message="#['sr-find-duplicate-artist' ++ sizeOf(payload.artists)]"/>
+	</sub-flow>
 	<sub-flow name="sr-build-query-param-list" doc:id="fa26ab3b-4c1c-43fa-b694-20bd813194ce" >
 		<logger level="INFO" doc:name="INFO START" doc:id="190dcf97-a721-47ae-b492-a4f1d96846aa" message="#['sr-build-query-param-list::START::payload: ' ++ write(payload,'application/json')]"/>
 		<ee:transform doc:name="queryParams" doc:id="51e39004-d16a-4323-b061-58770b28ed86" >
@@ -90,6 +97,10 @@ payload.artists]]></ee:set-variable>
 			<logger level="INFO" doc:name="payload" doc:id="a8ac2659-3944-4dc0-a361-43e39ffde651" message="#['impl-add-artists::ForEach::payload: ' ++ write(payload, 'application/json')]"/>
 			<set-payload value="#[output application/json&#10;---&#10;{&#10;	artist: {&#10;		artistId: payload.artistId,&#10;		groupName: payload.groupName,&#10;		lastName: payload.lastName,&#10;		firstName: payload.firstName,&#10;		mi: payload.mi,&#10;		dateOfBirth: payload.dateOfBirth,&#10;		dateOfDeath: payload.dateOfDeath&#10;	}&#10;}]" doc:name="artist" doc:id="11debe35-34a5-4e7d-b2bd-61b67dd8653c" />
 			<logger level="DEBUG" doc:name="artist" doc:id="928cc591-c233-4be4-928a-287aba189c54" message="#['impl-add-artists::ForEach::artist: ' ++ write(payload, 'application/json')]" />
+			<flow-ref doc:name="sr-find-duplicate-artist" doc:id="6d6982be-45f8-4584-930f-08e576b26bc3" name="sr-find-duplicate-artist" target="getArtistResponse "/>
+			<choice doc:name="Artist Found?" doc:id="d7d27e19-9b72-4162-afd9-adcb292ea323" >
+				<when expression="vars.getArtistResponse.artists[0]==null"/>
+			</choice>
 			<flow-ref doc:name="sr-insert-artist" doc:id="f64e259e-6ef8-4191-9e61-eb5f4f6b7dc1" name="sr-insert-artist" target="newArtist"/>
 			<set-variable value="#[%dw 2.0&#10;output application/java&#10;---&#10;vars.artistsOut + vars.newArtist]" doc:name="append artistsOut" doc:id="64d96102-fc9c-403b-8096-70f7f5ab918f" variableName="artistsOut" />
 		</foreach>
