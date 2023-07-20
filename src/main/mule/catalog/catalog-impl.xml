@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:sps-logger="http://www.mulesoft.org/schema/mule/sps-logger" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/sps-logger http://www.mulesoft.org/schema/mule/sps-logger/current/mule-sps-logger.xsd">
 	<sub-flow name="impl-get-catalog" doc:id="cf9bfc54-377d-43a1-bc2e-99235f1fa18e" >
 		<logger level="INFO" doc:name="INFO START" doc:id="78d4b2a3-2239-41af-bae9-30a56733fac3" message="impl-get-catalog::START"/>
 		<db:select doc:name="Select CATALOG" doc:id="17862358-34f2-496c-b659-83a01b804d02" config-ref="mysql-config">
@@ -27,9 +28,42 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 		<ee:transform doc:name="payload" doc:id="fd9954f1-f7fd-4260-9f68-d0dc31f7b2bb" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
+var catalogQuery = payload
+
+fun formatDate(d: Date) =
+  d as String {format: "MM/dd/YYYY"}
+output application/json  
 ---
-payload]]></ee:set-payload>
+{
+  "albums": (catalogQuery groupBy $.ALBUM_NM mapObject (albumsGroup, agKey) -> (
+    "album": {
+      "albumTitle": agKey,
+      "publicationDate": formatDate(albumsGroup.ALBUM_PUBLISH[0]),
+      "groupName": albumsGroup.GROUP_NM[0],
+      "songs": (albumsGroup groupBy $.SONG_TITLE mapObject (songsGroup, sgKey) -> (
+        "song": {
+          "songTitle": sgKey,
+          "genre": songsGroup.SONG_GENRE[0],
+          "songDuration": songsGroup.SONG_DURATION[0],
+          "songWriters": (songsGroup groupBy $.ARTIST_LAST mapObject (artistsGroup, agKey) -> (
+            "writer": {
+              "writer": artistsGroup.ARTIST_FIRST[0] ++ " " ++ artistsGroup.ARTIST_LAST[0],
+              "lifeDates": 
+                (if (artistsGroup.ARTIST_DEATH[0] != "")
+                  (
+                    "lifeDates": formatDate(artistsGroup.ARTIST_BIRTH[0]) ++ "-" ++ formatDate(artistsGroup.ARTIST_DEATH[0])
+                  )
+                else
+
+                    "lifeDates": formatDate(artistsGroup.ARTIST_BIRTH[0])
+                )
+            }
+          )).*writer orderBy $.writer
+        }
+      )).*song orderBy $.songTitle
+    }
+  )).*album orderBy $.publicationDate
+}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
