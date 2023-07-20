@@ -21,6 +21,19 @@ uses:
 resourceTypes:
   collection: !include resourceTypes/collection.raml
   item: !include resourceTypes/item.raml
+  
+/catalog:
+  description: The catalog provides the means to return all of the albums, sogns and artists associated with a group name
+  is: [commonTraits.clientIdRequired, commonTraits.correlationRequired, commonTraits.errorResponseRequired]
+  get:
+    is: [catalogQueries.queryParams]
+    responses:
+      200:
+        body:
+          application/json:
+            type: catalogResponses.catalogResponseForGet
+            examples:
+              example: !include examples/catalog/catalogGetResponse.json
 
 /songs:
   description: The songs resource exposes methods to retrieve and add collections of songs

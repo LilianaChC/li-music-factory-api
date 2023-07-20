@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_5004d41b_6167_41cf_ac45_aac88c8535a5_Input_Variables_queryParamList = Any
+
