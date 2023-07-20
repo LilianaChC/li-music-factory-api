@@ -24,14 +24,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 	groupName: attributes.queryParams.groupName ++ "%"
 }]]]></db:input-parameters>
 		</db:select>
-		<ee:transform doc:name="payload" doc:id="c7adb544-0ef6-4172-a5e0-66c125704cee">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/java
----
-{
-}]]></ee:set-payload>
-			</ee:message>
+		<ee:transform doc:name="payload" doc:id="fd9954f1-f7fd-4260-9f68-d0dc31f7b2bb" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json

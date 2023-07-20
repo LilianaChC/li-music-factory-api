@@ -150,10 +150,6 @@ type auto_601f7afe_12fc_413d_8a7e_8183ebcf55c0_Output_Variables_incomingArtist =
 
 ]]></types:shape>
     </types:type>
-    <types:type name="incomingArtist" format="java">
-      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
-type: string]]></types:shape>
-    </types:type>
     <types:type name="artist" format="json">
       <types:shape format="weave" example="api/examples/artist/requests/artistAddRequest.json"><![CDATA[%dw 2.0
 
@@ -338,6 +334,18 @@ type auto_23676cf3_d199_42ab_a6e2_14c6c20937a6_Output_Variables_artistsOut = Arr
 
 ]]></types:shape>
     </types:type>
+    <types:type name="album" format="json">
+      <types:shape format="weave" example="api/examples/album/responses/albumsGetResponse.json"><![CDATA[%dw 2.0
+
+type album = {|
+  statusCode: Number {"typeId": "int"}, 
+  message: String, 
+  searchCriteria: String, 
+  albums: Array<{|    albumId: Number {"typeId": "int"},     albumTitle: String,     genre: String,     publicationDate: String,     artistId: Number {"typeId": "int"},     groupName: String  |}>
+|} {"example": "{\\\"statusCode\\\":200,\\\"message\\\":\\\"SUCCESS\\\",\\\"searchCriteria\\\":\\\"Let it Be\\\",\\\"albums\\\":[{\\\"albumId\\\":1,\\\"albumTitle\\\":\\\"The Beatles\\\",\\\"genre\\\":\\\"Rock\\\",\\\"publicationDate\\\":\\\"1968-11-22\\\",\\\"artistId\\\":1,\\\"groupName\\\":\\\"The Beatles\\\"},{\\\"albumId\\\":4,\\\"albumTitle\\\":\\\"Let It Be\\\",\\\"genre\\\":\\\"Rock\\\",\\\"publicationDate\\\":\\\"2000-05-08\\\",\\\"artistId\\\":1,\\\"groupName\\\":\\\"The Beatles\\\"}]}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#7bc94b8f-de8e-4aa9-9e0c-6983528c101d">
     <types:processor-declaration>
@@ -465,4 +473,5 @@ type auto_23676cf3_d199_42ab_a6e2_14c6c20937a6_Output_Variables_artistsOut = Arr
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#fd9954f1-f7fd-4260-9f68-d0dc31f7b2bb"/>
 </types:mule>

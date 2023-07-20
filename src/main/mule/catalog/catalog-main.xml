@@ -6,6 +6,6 @@
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 <flow name="get:\catalog:li-music-factory-api-config">
 		<set-variable value="catalog-main::impl-get-catalog" doc:name="currentFlow" doc:id="2a741f98-12f6-41da-a53c-d078b2941153" variableName="currentFlow"/>
-		<flow-ref doc:name="Flow Reference" doc:id="26fcda93-6bd3-4b4a-b5b5-e82f4dff7c0a" name="impl-get-catalog"/>
+		<flow-ref doc:name="impl-get-catalog" doc:id="26fcda93-6bd3-4b4a-b5b5-e82f4dff7c0a" name="impl-get-catalog"/>
     </flow>
 </mule>
